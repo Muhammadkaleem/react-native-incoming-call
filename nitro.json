@@ -1,0 +1,17 @@
+{
+  "cxxNamespace": ["incomingcall"],
+  "ios": {
+    "iosModuleName": "IncomingCall"
+  },
+  "android": {
+    "androidNamespace": ["incomingcall"],
+    "androidCxxLibName": "incomingcall"
+  },
+  "autolinking": {
+    "IncomingCall": {
+      "swift": "HybridIncomingCall",
+      "kotlin": "HybridIncomingCall"
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}

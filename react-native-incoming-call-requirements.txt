@@ -1,0 +1,105 @@
+React Native Incoming Call Package – Requirements
+
+Objective Build a React Native package that displays a custom incoming
+call screen which works in foreground, background, and lock screen state
+on Android. The package should use Nitro View / Nitro Modules
+architecture for better performance and modern React Native
+compatibility.
+
+Core Features 1. Display a full-screen incoming call UI. 2. Support lock
+screen display. 3. Work when the app is: - Foreground - Background -
+Killed state 4. Provide Answer and Reject buttons. 5. Send events back
+to React Native when: - Call answered - Call rejected - Call timeout 6.
+Allow customization of: - Caller name - Caller avatar - Background
+color - Button styles - Ringtone
+
+Technical Requirements
+
+Framework - React Native - Nitro Modules - Nitro View for rendering the
+native UI
+
+Android Native Components
+
+Create the following components:
+
+1.  IncomingCallActivity
+    -   Full-screen activity
+    -   Should appear on lock screen
+    -   Hosts the Nitro View UI
+2.  IncomingCallView (Nitro View)
+    -   Native UI component
+    -   Displays caller info
+    -   Handles answer and reject actions
+3.  IncomingCallService
+    -   Background service
+    -   Used for showing the incoming call screen when the app is in
+        background
+4.  FirebaseMessagingService Integration
+    -   Trigger incoming call UI when receiving a push notification
+
+Lock Screen Behavior
+
+The incoming call activity must: - Show above lock screen - Turn screen
+on - Wake device
+
+Required flags: - FLAG_SHOW_WHEN_LOCKED - FLAG_TURN_SCREEN_ON -
+FLAG_DISMISS_KEYGUARD
+
+Android 10+ methods: setShowWhenLocked(true) setTurnScreenOn(true)
+
+JS API Design
+
+Example usage:
+
+import IncomingCall from “react-native-incoming-call”;
+
+IncomingCall.display({ uuid: “call-id”, callerName: “John Doe”, avatar:
+“https://avatar.url”, timeout: 20000 });
+
+Methods - displayIncomingCall() - endCall() - answerCall() -
+rejectCall()
+
+Events - onAnswer - onReject - onTimeout
+
+Example:
+
+IncomingCall.addEventListener(“onAnswer”, () => {});
+IncomingCall.addEventListener(“onReject”, () => {});
+
+Package Structure
+
+react-native-incoming-call │ ├── src │ ├── IncomingCallView.tsx │ ├──
+index.ts │ ├── nitro │ ├── IncomingCallViewSpec.ts │ ├── android │ ├──
+IncomingCallActivity.kt │ ├── IncomingCallView.kt │ ├──
+IncomingCallService.kt │ ├── example │ ├── package.json └── README.md
+
+Android Permissions
+
+android.permission.USE_FULL_SCREEN_INTENT android.permission.WAKE_LOCK
+android.permission.FOREGROUND_SERVICE
+
+UI Requirements
+
+Incoming call screen should contain: - Caller avatar - Caller name -
+Answer button - Reject button - Optional timer
+
+UI should be customizable from React Native props.
+
+Testing Requirements
+
+Ensure the incoming call screen works correctly in the following
+scenarios:
+
+1.  App in foreground
+2.  App in background
+3.  App killed
+4.  Phone locked
+5.  Answer action
+6.  Reject action
+7.  Call timeout
+
+Future Extensibility
+
+The architecture should allow future additions: - iOS CallKit support -
+Video call UI - Custom ringtone control - Call notifications fallback -
+WebRTC integration

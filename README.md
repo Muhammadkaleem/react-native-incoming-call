@@ -1,231 +1,280 @@
-# React Native Incoming Call
+# react-native-incoming-call
 
-A React Native package that displays a custom incoming call screen which works in foreground, background, and lock screen state on Android. Built with Nitro Modules for better performance and modern React Native compatibility.
+> Full-screen incoming call UI for React Native — works on foreground, background, and lock screen on Android. Built on [Nitro Modules](https://nitro.margelo.com/) for maximum native performance.
+
+---
 
 ## Features
 
-- 📱 Full-screen incoming call UI
-- 🔒 Lock screen display support
-- ⚡ Works in foreground, background, and killed app states
-- 🎨 Customizable caller info, avatar, and UI
-- ⏰ Built-in timeout handling
-- 📞 Answer and reject functionality
-- 🎵 Customizable ringtone support
-- 📡 Event-driven architecture
+- Full-screen incoming call activity shown above the lock screen
+- Wakes the device screen and dismisses the keyguard automatically
+- Works in foreground, background, and killed-app states
+- Foreground service keeps the call alive when the app is not running
+- Answer / Reject buttons with event callbacks to JavaScript
+- Auto-timeout with configurable duration
+- Customisable caller name, avatar, background colour, and call type
+- Inline `IncomingCallView` Nitro View for embedding in your own React Native screen
+- Event-driven API — subscribe with a simple `addEventListener` / cleanup function
+
+---
+
+## Platform support
+
+| Platform | Support |
+|----------|---------|
+| Android | ✅ Full support |
+| iOS | 🔜 Planned (CallKit) |
+
+---
 
 ## Installation
 
 ```bash
+# npm
 npm install react-native-incoming-call react-native-nitro-modules
-# or
+
+# yarn
 yarn add react-native-incoming-call react-native-nitro-modules
 ```
 
-> `react-native-nitro-modules` is required as this library relies on [Nitro Modules](https://nitro.margelo.com/).
+[react-native-nitro-modules](https://nitro.margelo.com/) is a required peer dependency.
 
-## Requirements
+### Android permissions
 
-- React Native 0.70+
-- Nitro Modules
-- Android API 21+
-- Android permissions:
-  - `USE_FULL_SCREEN_INTENT`
-  - `WAKE_LOCK`
-  - `FOREGROUND_SERVICE`
-
-## Usage
-
-### Basic Usage
-
-```typescript
-import IncomingCall from 'react-native-incoming-call';
-
-// Display an incoming call
-IncomingCall.display({
-  uuid: 'call-123',
-  callerName: 'John Doe',
-  avatar: 'https://example.com/avatar.jpg',
-  callType: 'video',
-  backgroundColor: '#1a1a1a',
-  timeout: 20000
-});
-```
-
-### Using the IncomingCallPage Component
-
-```typescript
-import React, { useState } from 'react';
-import IncomingCallPage from 'react-native-incoming-call/IncomingCallPage';
-
-const MyComponent = () => {
-  const [showCall, setShowCall] = useState(false);
-
-  return (
-    <>
-      {showCall && (
-        <IncomingCallPage
-          uuid="call-123"
-          callerName="John Doe"
-          avatar="https://example.com/avatar.jpg"
-          callType="video"
-          backgroundColor="#1a1a1a"
-          onAnswer={() => {
-            console.log('Call answered');
-            setShowCall(false);
-          }}
-          onReject={() => {
-            console.log('Call rejected');
-            setShowCall(false);
-          }}
-          timeout={20000}
-        />
-      )}
-    </>
-  );
-};
-```
-
-### Event Listeners
-
-```typescript
-import IncomingCall from 'react-native-incoming-call';
-
-// Set up event listeners
-const unsubscribeAnswer = IncomingCall.addEventListener('onAnswer', (data) => {
-  console.log('Call answered:', data.uuid);
-});
-
-const unsubscribeReject = IncomingCall.addEventListener('onReject', (data) => {
-  console.log('Call rejected:', data.uuid);
-});
-
-const unsubscribeTimeout = IncomingCall.addEventListener('onTimeout', (data) => {
-  console.log('Call timed out:', data.uuid);
-});
-
-// Clean up listeners
-// unsubscribeAnswer();
-// unsubscribeReject();
-// unsubscribeTimeout();
-```
-
-### Call Management
-
-```typescript
-import IncomingCall from 'react-native-incoming-call';
-
-// Answer a call
-await IncomingCall.answer('call-123');
-
-// Reject a call
-await IncomingCall.reject('call-123');
-
-// End an ongoing call
-await IncomingCall.end('call-123');
-```
-
-## API Reference
-
-### IncomingCall.display(options)
-
-Display an incoming call screen.
-
-**Parameters:**
-- `options` (IncomingCallDisplayOptions): Configuration options
-
-**IncomingCallDisplayOptions:**
-- `uuid` (string): Unique identifier for the call
-- `callerName` (string): Name of the caller
-- `avatar` (string, optional): URL to caller's avatar image
-- `callType` ('audio' | 'video', optional): Type of call (default: 'audio')
-- `backgroundColor` (string, optional): Background color (default: '#0a0a0a')
-- `timeout` (number, optional): Auto-reject timeout in ms (default: 20000)
-
-### IncomingCall.answer(uuid)
-
-Answer an incoming call.
-
-**Parameters:**
-- `uuid` (string): Unique identifier for the call
-
-### IncomingCall.reject(uuid)
-
-Reject an incoming call.
-
-**Parameters:**
-- `uuid` (string): Unique identifier for the call
-
-### IncomingCall.end(uuid)
-
-End an ongoing call.
-
-**Parameters:**
-- `uuid` (string): Unique identifier for the call
-
-### Event Listeners
-
-#### IncomingCall.addEventListener(event, listener)
-
-Add an event listener for call events.
-
-**Parameters:**
-- `event` ('onAnswer' | 'onReject' | 'onTimeout'): Event type
-- `listener` (function): Callback function
-
-**Returns:** Unsubscribe function
-
-#### IncomingCall.removeEventListener(event, listener)
-
-Remove an event listener.
-
-**Parameters:**
-- `event` ('onAnswer' | 'onReject' | 'onTimeout'): Event type
-- `listener` (function): Callback function to remove
-
-## IncomingCallPage Component
-
-A React component that renders the incoming call UI.
-
-**Props:**
-- `uuid` (string): Unique identifier for the call
-- `callerName` (string): Name of the caller
-- `avatar` (string, optional): URL to caller's avatar image
-- `callType` ('audio' | 'video', optional): Type of call (default: 'audio')
-- `backgroundColor` (string, optional): Background color (default: '#0a0a0a')
-- `onAnswer` (function, optional): Callback when answer button is pressed
-- `onReject` (function, optional): Callback when reject button is pressed
-- `timeout` (number, optional): Auto-reject timeout in ms (default: 20000)
-
-## Android Setup
-
-### Permissions
-
-Add these permissions to your `AndroidManifest.xml`:
+The library merges its own `AndroidManifest.xml` automatically. If you need to declare them manually, add the following to your app's `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 <uses-permission android:name="android.permission.WAKE_LOCK" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+<uses-permission android:name="android.permission.VIBRATE" />
 ```
-
-### Activities
-
-The package automatically registers the necessary activities for displaying the incoming call screen above the lock screen.
-
-## Example
-
-See the `example/` directory for a complete working example.
-
-## Contributing
-
-- [Development workflow](CONTRIBUTING.md#development-workflow)
-- [Sending a pull request](CONTRIBUTING.md#sending-a-pull-request)
-- [Code of conduct](CODE_OF_CONDUCT.md)
-
-## License
-
-MIT
 
 ---
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+## Quick start
+
+```typescript
+import IncomingCall from 'react-native-incoming-call';
+
+// Show the incoming call screen (from a push notification handler, etc.)
+await IncomingCall.display({
+  uuid: 'call-abc-123',
+  callerName: 'John Doe',
+  avatar: 'https://example.com/avatar.jpg',
+  callType: 'audio',          // 'audio' | 'video'
+  backgroundColor: '#1A1A2E',
+  timeout: 20000,             // auto-reject after 20 s
+});
+```
+
+---
+
+## API reference
+
+### `IncomingCall.display(options)`
+
+Starts the foreground service and launches the full-screen call activity.
+
+```typescript
+IncomingCall.display({
+  uuid: string;             // unique call ID (required)
+  callerName: string;       // caller display name (required)
+  avatar?: string;          // remote avatar URL
+  callType?: 'audio' | 'video';  // defaults to 'audio'
+  backgroundColor?: string; // hex colour, e.g. '#1A1A2E'
+  timeout?: number;         // ms before auto-reject, default 30000
+}): Promise<void>
+```
+
+### `IncomingCall.answer(uuid)`
+
+Programmatically answer the call and emit `onAnswer`.
+
+```typescript
+await IncomingCall.answer('call-abc-123');
+```
+
+### `IncomingCall.reject(uuid)`
+
+Programmatically reject the call and emit `onReject`.
+
+```typescript
+await IncomingCall.reject('call-abc-123');
+```
+
+### `IncomingCall.end(uuid)`
+
+End an active call and stop the foreground service.
+
+```typescript
+await IncomingCall.end('call-abc-123');
+```
+
+### `IncomingCall.addEventListener(event, listener)`
+
+Subscribe to a call lifecycle event. Returns an unsubscribe function.
+
+```typescript
+const unsubscribe = IncomingCall.addEventListener('onAnswer', (data) => {
+  console.log('Answered:', data.uuid, data.timestamp);
+});
+
+// later…
+unsubscribe();
+```
+
+| Event | When fired |
+|-------|-----------|
+| `onAnswer` | User taps Accept or `answer()` is called |
+| `onReject` | User taps Decline or `reject()` is called |
+| `onTimeout` | Timeout elapsed with no user action |
+
+### `IncomingCall.removeEventListener(event, listener)`
+
+Alternative to calling the returned unsubscribe function.
+
+```typescript
+IncomingCall.removeEventListener('onAnswer', myListener);
+```
+
+---
+
+## Event data shape
+
+```typescript
+interface IncomingCallEventData {
+  uuid: string;       // the call ID passed to display()
+  timestamp: number;  // Unix epoch ms
+}
+```
+
+---
+
+## IncomingCallView (Nitro View)
+
+Embed an inline call UI inside your own React Native screen (foreground use-case).
+
+```tsx
+import { IncomingCallView } from 'react-native-incoming-call';
+
+<IncomingCallView
+  color="#1A1A2E"
+  callerName="John Doe"
+  callType="audio"
+  style={{ width: '100%', height: 220, borderRadius: 16 }}
+/>
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `color` | `string` | `"#1A1A2E"` | Background colour (hex) |
+| `callerName` | `string` | — | Caller display name |
+| `avatar` | `string` | — | Avatar URL |
+| `callType` | `string` | `"audio"` | `"audio"` or `"video"` |
+| `timeout` | `number` | `30000` | Auto-reject timeout (ms) |
+
+**Methods** (via ref):
+
+```tsx
+const ref = useRef<IncomingCallViewRef>(null);
+
+ref.current?.answerCall();
+ref.current?.rejectCall();
+```
+
+---
+
+## Full example
+
+```tsx
+import React, { useEffect } from 'react';
+import { Button } from 'react-native';
+import IncomingCall from 'react-native-incoming-call';
+
+export default function App() {
+  useEffect(() => {
+    const unsubAnswer  = IncomingCall.addEventListener('onAnswer',  (d) => console.log('answered', d.uuid));
+    const unsubReject  = IncomingCall.addEventListener('onReject',  (d) => console.log('rejected', d.uuid));
+    const unsubTimeout = IncomingCall.addEventListener('onTimeout', (d) => console.log('timeout',  d.uuid));
+
+    return () => {
+      unsubAnswer();
+      unsubReject();
+      unsubTimeout();
+    };
+  }, []);
+
+  const call = () =>
+    IncomingCall.display({
+      uuid: `call-${Date.now()}`,
+      callerName: 'Jane Smith',
+      callType: 'video',
+      backgroundColor: '#0D1B2A',
+      timeout: 15000,
+    });
+
+  return <Button title="Simulate Incoming Call" onPress={call} />;
+}
+```
+
+See the [`example/`](example/) directory for the full working demo app.
+
+---
+
+## Architecture
+
+```
+react-native-incoming-call
+├── src/
+│   ├── index.tsx                 JS/TS public API + event manager
+│   └── IncomingCall.nitro.ts     Nitro spec (props & methods)
+├── android/
+│   └── src/main/java/…
+│       ├── IncomingCallModule.kt     RN bridge — display/answer/reject/end
+│       ├── IncomingCallActivity.kt   Full-screen lock-screen activity
+│       ├── IncomingCallService.kt    Foreground service (phoneCall type)
+│       ├── IncomingCall.kt           HybridIncomingCall Nitro View
+│       └── IncomingCallPackage.kt    Package registration
+└── example/                      Demo app
+```
+
+**Call flow:**
+
+```
+JS: IncomingCall.display()
+  → IncomingCallModule (Kotlin)
+    → IncomingCallService (foreground, keeps alive in background/killed)
+      → IncomingCallActivity (lock screen, wake, full-screen UI)
+        → user taps Accept / Decline
+          → broadcast → IncomingCallModule → JS event (onAnswer / onReject)
+```
+
+---
+
+## Requirements
+
+| Requirement | Version |
+|-------------|---------|
+| React Native | 0.73+ |
+| react-native-nitro-modules | 0.35+ |
+| Android minSdk | 24 (Android 7.0) |
+| compileSdk | 36 |
+| Kotlin | 2.0+ |
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+Pull requests are welcome. For major changes, please open an issue first.
+
+## License
+
+MIT © [MuhammadKaleem](https://github.com/Muhammadkaleem)
+
+---
+
+Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob) + [Nitro Modules](https://nitro.margelo.com/)

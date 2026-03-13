@@ -1,0 +1,35 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Required permissions for incoming call functionality -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application>
+
+        <!-- Full-screen incoming call activity shown on lock screen -->
+        <activity
+            android:name=".IncomingCallActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity="com.margelo.nitro.incomingcall.incoming"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Foreground service to keep the call alive in background/killed state -->
+        <service
+            android:name=".IncomingCallService"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall"
+            android:stopWithTask="false" />
+
+    </application>
+
+</manifest>
+
