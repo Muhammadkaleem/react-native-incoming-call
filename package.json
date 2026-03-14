@@ -1,7 +1,7 @@
 {
-  "name": "react-native-incoming-call",
-  "version": "0.1.0",
-  "description": "com.incoming_call.package",
+  "name": "@connect-code/react-native-incoming-call",
+  "version": "0.1.2",
+  "description": "React Native incoming call UI for Android and iOS, built with Nitro Modules",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -46,18 +46,23 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "incoming-call",
+    "call-ui",
+    "voip",
+    "nitro-modules",
+    "phone-call"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Muhammadkaleem/react-native-incoming-call.git.git"
+    "url": "git+https://github.com/Muhammadkaleem/react-native-incoming-call.git"
   },
   "author": "MuhammadKaleem <kaleembhattii766@gmail.com> (https://www.github.com/Muhammadkaleem)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Muhammadkaleem/react-native-incoming-call.git/issues"
+    "url": "https://github.com/Muhammadkaleem/react-native-incoming-call/issues"
   },
-  "homepage": "https://github.com/Muhammadkaleem/react-native-incoming-call.git#readme",
+  "homepage": "https://github.com/Muhammadkaleem/react-native-incoming-call#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

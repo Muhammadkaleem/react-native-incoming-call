@@ -1,4 +1,4 @@
-# react-native-incoming-call
+# @connect-code/react-native-incoming-call
 
 > Full-screen incoming call UI for React Native — works on foreground, background, and lock screen on Android. Built on [Nitro Modules](https://nitro.margelo.com/) for maximum native performance.
 
@@ -31,10 +31,10 @@
 
 ```bash
 # npm
-npm install react-native-incoming-call react-native-nitro-modules
+npm install @connect-code/react-native-incoming-call react-native-nitro-modules
 
 # yarn
-yarn add react-native-incoming-call react-native-nitro-modules
+yarn add @connect-code/react-native-incoming-call react-native-nitro-modules
 ```
 
 [react-native-nitro-modules](https://nitro.margelo.com/) is a required peer dependency.
@@ -53,10 +53,76 @@ The library merges its own `AndroidManifest.xml` automatically. If you need to d
 
 ---
 
+## Expo
+
+| Workflow | Support |
+|----------|---------|
+| Expo Go | ❌ Not supported (native modules required) |
+| Development Build (`expo-dev-client`) | ✅ Supported |
+| Bare workflow | ✅ Supported |
+| EAS Build | ✅ Supported |
+
+This library uses **Nitro Modules** (C++ + Kotlin/Swift native code) and cannot run in Expo Go. You must use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) or bare workflow.
+
+### Setup with Expo Dev Client
+
+**1. Install dependencies**
+
+```bash
+npx expo install @connect-code/react-native-incoming-call react-native-nitro-modules expo-dev-client
+```
+
+**2. Rebuild your native app**
+
+```bash
+# Android
+npx expo run:android
+
+# or with EAS Build
+eas build --profile development --platform android
+```
+
+> No Expo config plugin is required — permissions and the foreground service are merged automatically via React Native autolinking.
+
+### Android 14+ note (`USE_FULL_SCREEN_INTENT`)
+
+On Android 14 (API 34) and above, `USE_FULL_SCREEN_INTENT` is a **restricted permission**. It is granted automatically only for apps that have the `ROLE_DIALER` or `ROLE_EMERGENCY` role. For all other apps you must direct the user to grant it manually:
+
+```typescript
+import { Linking } from 'react-native';
+
+// Open the system settings page for your app so the user can allow
+// "Display over other apps / full-screen notifications"
+Linking.openSettings();
+```
+
+Or use [`expo-intent-launcher`](https://docs.expo.dev/versions/latest/sdk/intent-launcher/) to open the exact settings screen:
+
+```typescript
+import * as IntentLauncher from 'expo-intent-launcher';
+
+IntentLauncher.startActivityAsync(
+  'android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENT',
+  { data: 'package:com.yourapp' }
+);
+```
+
+> For development builds the permission is typically auto-granted. This only matters for production apps targeting API 34+.
+
+### EAS Build
+
+No special configuration is needed. Add the library to your project and EAS Build will handle the rest through autolinking:
+
+```bash
+eas build --platform android
+```
+
+---
+
 ## Quick start
 
 ```typescript
-import IncomingCall from 'react-native-incoming-call';
+import IncomingCall from '@connect-code/react-native-incoming-call';
 
 // Show the incoming call screen (from a push notification handler, etc.)
 await IncomingCall.display({
@@ -157,7 +223,7 @@ interface IncomingCallEventData {
 Embed an inline call UI inside your own React Native screen (foreground use-case).
 
 ```tsx
-import { IncomingCallView } from 'react-native-incoming-call';
+import { IncomingCallView } from '@connect-code/react-native-incoming-call';
 
 <IncomingCallView
   color="#1A1A2E"
@@ -191,7 +257,7 @@ ref.current?.rejectCall();
 ```tsx
 import React, { useEffect } from 'react';
 import { Button } from 'react-native';
-import IncomingCall from 'react-native-incoming-call';
+import IncomingCall from '@connect-code/react-native-incoming-call';
 
 export default function App() {
   useEffect(() => {

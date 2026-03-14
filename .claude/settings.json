@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(adb install:*)",
+      "Bash(adb kill-server:*)",
+      "Bash(adb start-server:*)",
+      "Bash(./gradlew assembleDebug -ParchitectureFilter=arm64-v8a)",
+      "Bash(find /Users/apple/Desktop/NpmPackages/react-native-incoming-call/example/node_modules/react-native-monorepo-config -name *.js -type f)",
+      "Bash(kill 78160)",
+      "Bash(node -e \"require\\(''./metro.config.js''\\); console.log\\(''metro config loaded OK''\\)\")",
+      "Bash(node -e \":*)",
+      "Read(//private/tmp/**)",
+      "Bash(watchman watch-del:*)",
+      "Bash(watchman watch-project:*)",
+      "Bash(curl -s \"http://localhost:8081/index.bundle?platform=android&dev=true\" -o /tmp/bundle_test.js)",
+      "Read(//tmp/**)",
+      "Bash(curl -s \"http://localhost:8081/index.bundle?platform=android&dev=true\" -o /tmp/bundle_test2.js)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(npm whoami:*)",
+      "Bash(npm view:*)",
+      "Bash(npm publish:*)",
+      "Bash(npm version:*)"
+    ]
+  }
+}

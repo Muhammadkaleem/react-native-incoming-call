@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -98,7 +99,7 @@ class IncomingCallActivity : AppCompatActivity() {
 
         val avatarSize = dp(100)
         val avatar = TextView(this).apply {
-            id = generateViewId()
+            id = View.generateViewId()
             layoutParams = RelativeLayout.LayoutParams(avatarSize, avatarSize).apply {
                 addRule(RelativeLayout.CENTER_HORIZONTAL)
                 topMargin = dp(110)
@@ -113,7 +114,7 @@ class IncomingCallActivity : AppCompatActivity() {
 
         // ── "Incoming call" subtitle ────────────────────────────────────────
         val subtitle = TextView(this).apply {
-            id = generateViewId()
+            id = View.generateViewId()
             layoutParams = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -130,7 +131,7 @@ class IncomingCallActivity : AppCompatActivity() {
 
         // ── Caller name ─────────────────────────────────────────────────────
         val nameView = TextView(this).apply {
-            id = generateViewId()
+            id = View.generateViewId()
             layoutParams = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -147,7 +148,7 @@ class IncomingCallActivity : AppCompatActivity() {
 
         // ── Countdown timer ─────────────────────────────────────────────────
         timerView = TextView(this).apply {
-            id = generateViewId()
+            id = View.generateViewId()
             layoutParams = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -163,7 +164,7 @@ class IncomingCallActivity : AppCompatActivity() {
 
         // ── Bottom action buttons ───────────────────────────────────────────
         val buttonsRow = LinearLayout(this).apply {
-            id = generateViewId()
+            id = View.generateViewId()
             layoutParams = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
