@@ -11,13 +11,15 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => min_ios_version_supported }
-  s.source       = { :git => "https://github.com/Muhammadkaleem/react-native-incoming-call.git.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/Muhammadkaleem/react-native-incoming-call.git", :tag => "#{s.version}" }
 
   s.source_files = [
     "ios/**/*.{swift}",
     "ios/**/*.{m,mm}",
     "cpp/**/*.{hpp,cpp}",
   ]
+
+  s.frameworks   = 'CallKit'
 
   s.dependency 'React-jsi'
   s.dependency 'React-callinvoker'

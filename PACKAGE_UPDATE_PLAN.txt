@@ -1,0 +1,103 @@
+================================================================================
+  @connect-code/react-native-incoming-call — Improvement & Update Plan
+================================================================================
+Current version: 0.2.0
+Package: https://www.npmjs.com/package/@connect-code/react-native-incoming-call
+Repo:    https://github.com/Muhammadkaleem/react-native-incoming-call
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+ PHASE 2 — Feature Improvements  (v0.3.0)
+────────────────────────────────────────────────────────────────────────────────
+
+ 1. Avatar image support
+    - Currently the Android activity shows initials-only avatar (no image loading)
+    - Load avatar from URL using a lightweight HTTP fetch + Bitmap decode
+    - Fall back to initials circle if URL is invalid / unreachable
+
+ 2. Custom ringtone support
+    - Add ringtone?: string option to IncomingCallDisplayOptions
+    - Accept a local asset URI or a resource name (e.g. 'ringtone_default')
+    - Play ringtone via AudioManager in IncomingCallService on Android
+    - Respect device silent/vibrate mode
+
+ 3. Custom notification channel (Android)
+    - Let the host app specify notificationChannelId in display() options
+    - Default channel: "Incoming Calls" with HIGH importance
+    - Allows apps with existing channels to reuse them
+
+ 4. Missed call local notification
+    - When onTimeout fires, automatically post a "Missed call from X" notification
+    - Option to disable: showMissedCallNotification?: boolean (default true)
+
+ 5. Background / killed-state JS handler
+    - Provide a headless task registration so JS code can run when the call
+      arrives and the app is completely killed (Android Headless JS)
+    - IncomingCall.setBackgroundHandler((options) => Promise<void>)
+
+
+────────────────────────────────────────────────────────────────────────────────
+ PHASE 3 — Developer Experience  (v0.4.0)
+────────────────────────────────────────────────────────────────────────────────
+
+ 6. Expo config plugin
+    - Create an Expo config plugin (withIncomingCall) so managed-workflow apps
+      can add permissions and AndroidManifest entries without ejecting
+    - Plugin options: notificationChannelName, ringtone, androidMinSdk
+    - Publish plugin in the same package (plugin/ directory)
+
+ 7. Push notification integration guide
+    - Add docs + example for triggering IncomingCall.display() from:
+        • Firebase Cloud Messaging (FCM) data-only message
+        • APNs VoIP push (iOS, via CallKit)
+    - Provide a working example app showing FCM → incoming call flow
+
+ 8. TypeScript strict mode
+    - Enable strict: true in tsconfig.build.json
+    - Eliminate all implicit any / loose types in src/index.tsx
+    - Export all public types from the package root
+
+ 9. Unit & integration tests
+    - Add Jest unit tests for IncomingCallEventManager (subscribe / unsubscribe)
+    - Add Jest mock for NativeModules.IncomingCallModule
+    - Add detox / maestro end-to-end test for the example app
+
+
+────────────────────────────────────────────────────────────────────────────────
+ PHASE 4 — Polish & Ecosystem  (v1.0.0)
+────────────────────────────────────────────────────────────────────────────────
+
+ 10. UI customisation (Android activity)
+    - Accept a theme object: { accentColor, buttonSize, fontFamily }
+    - Support dark / light background auto-detection based on backgroundColor
+
+ 11. Accessibility
+    - Add contentDescription to all buttons in IncomingCallActivity
+    - Ensure TalkBack announces caller name and call type on screen open
+
+ 12. Changelog & versioning
+    - Maintain CHANGELOG.md following Keep a Changelog format
+    - Automate with @release-it/conventional-changelog (already in devDeps)
+    - Tag all releases on GitHub with release notes
+
+ 13. CI/CD pipeline
+    - Add GitHub Actions workflow:
+        • lint + typecheck on every PR
+        • npm publish on tag push (v*)
+        • Android build check via Gradle
+
+
+────────────────────────────────────────────────────────────────────────────────
+ VERSION ROADMAP SUMMARY
+────────────────────────────────────────────────────────────────────────────────
+
+  v0.1.2  (done)  — Android working, iOS stub, npm published
+  v0.2.0  (done)  — iOS CallKit implemented, unified events, Android 14+
+                    permission helpers, all deprecation bugs fixed
+  v0.3.0          — Avatar images, ringtone, missed call notification,
+                    background handler
+  v0.4.0          — Expo plugin, FCM guide, tests, TypeScript strict
+  v1.0.0          — Full polish, accessibility, CI/CD, stable API
+
+================================================================================

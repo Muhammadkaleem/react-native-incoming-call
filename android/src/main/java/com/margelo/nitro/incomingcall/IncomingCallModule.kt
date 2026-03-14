@@ -1,10 +1,13 @@
 package com.margelo.nitro.incomingcall
 
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -125,6 +128,28 @@ class IncomingCallModule(private val reactContext: ReactApplicationContext) :
         } catch (e: Exception) {
             promise.reject("END_ERROR", e.message, e)
         }
+    }
+
+    @ReactMethod
+    fun canShowFullScreen(promise: Promise) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val nm = reactContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            promise.resolve(nm.canUseFullScreenIntent())
+        } else {
+            promise.resolve(true)
+        }
+    }
+
+    @ReactMethod
+    fun requestFullScreenPermission(promise: Promise) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+                data = Uri.parse("package:${reactContext.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            reactContext.startActivity(intent)
+        }
+        promise.resolve(null)
     }
 
     // Required by NativeEventEmitter on JS side

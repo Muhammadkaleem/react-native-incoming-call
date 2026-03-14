@@ -31,18 +31,23 @@ export interface IncomingCallEventData {
 // Event emitter for handling incoming call events
 class IncomingCallEventManager {
   private eventEmitter: NativeEventEmitter | undefined;
-  private listeners: Map<IncomingCallEventType, Set<(data: IncomingCallEventData) => void>> = new Map();
+  private listeners: Map<
+    IncomingCallEventType,
+    Set<(data: IncomingCallEventData) => void>
+  > = new Map();
 
   constructor() {
-    if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
-      this.eventEmitter = new NativeEventEmitter(NativeModules.IncomingCallModule);
+    if (NativeModules.IncomingCallModule) {
+      this.eventEmitter = new NativeEventEmitter(
+        NativeModules.IncomingCallModule
+      );
       this.setupNativeListeners();
     }
   }
 
   private setupNativeListeners() {
     if (!this.eventEmitter) return;
-    
+
     this.eventEmitter.addListener('onAnswer', (data: any) => {
       this.emit('onAnswer', data as IncomingCallEventData);
     });
@@ -59,11 +64,14 @@ class IncomingCallEventManager {
   private emit(event: IncomingCallEventType, data: IncomingCallEventData) {
     const listeners = this.listeners.get(event);
     if (listeners) {
-      listeners.forEach(listener => listener(data));
+      listeners.forEach((listener) => listener(data));
     }
   }
 
-  addEventListener(event: IncomingCallEventType, listener: (data: IncomingCallEventData) => void) {
+  addEventListener(
+    event: IncomingCallEventType,
+    listener: (data: IncomingCallEventData) => void
+  ) {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
@@ -75,7 +83,10 @@ class IncomingCallEventManager {
     };
   }
 
-  removeEventListener(event: IncomingCallEventType, listener: (data: IncomingCallEventData) => void) {
+  removeEventListener(
+    event: IncomingCallEventType,
+    listener: (data: IncomingCallEventData) => void
+  ) {
     this.listeners.get(event)?.delete(listener);
   }
 }
@@ -89,8 +100,10 @@ export class IncomingCall {
    */
   static async display(options: IncomingCallDisplayOptions): Promise<void> {
     try {
-      if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
-        return await NativeModules.IncomingCallModule.displayIncomingCall(options);
+      if (NativeModules.IncomingCallModule) {
+        return await NativeModules.IncomingCallModule.displayIncomingCall(
+          options
+        );
       } else {
         console.warn('IncomingCall: Native module not available');
       }
@@ -105,7 +118,7 @@ export class IncomingCall {
    */
   static async answer(uuid: string): Promise<void> {
     try {
-      if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
+      if (NativeModules.IncomingCallModule) {
         return await NativeModules.IncomingCallModule.answerCall(uuid);
       } else {
         console.warn('IncomingCall: Native module not available');
@@ -121,7 +134,7 @@ export class IncomingCall {
    */
   static async reject(uuid: string): Promise<void> {
     try {
-      if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
+      if (NativeModules.IncomingCallModule) {
         return await NativeModules.IncomingCallModule.rejectCall(uuid);
       } else {
         console.warn('IncomingCall: Native module not available');
@@ -137,7 +150,7 @@ export class IncomingCall {
    */
   static async end(uuid: string): Promise<void> {
     try {
-      if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
+      if (NativeModules.IncomingCallModule) {
         return await NativeModules.IncomingCallModule.endCall(uuid);
       } else {
         console.warn('IncomingCall: Native module not available');
@@ -145,6 +158,27 @@ export class IncomingCall {
     } catch (error) {
       console.error('IncomingCall: Failed to end call', error);
       throw error;
+    }
+  }
+
+  /**
+   * Check if the app can show full-screen intents (Android 14+ only).
+   * Always returns true on iOS and Android < 14.
+   */
+  static async canShowFullScreen(): Promise<boolean> {
+    if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
+      return await NativeModules.IncomingCallModule.canShowFullScreen();
+    }
+    return true;
+  }
+
+  /**
+   * Open system settings so the user can grant USE_FULL_SCREEN_INTENT
+   * (Android 14+ only). No-op on other platforms / API levels.
+   */
+  static async requestFullScreenPermission(): Promise<void> {
+    if (Platform.OS === 'android' && NativeModules.IncomingCallModule) {
+      return await NativeModules.IncomingCallModule.requestFullScreenPermission();
     }
   }
 

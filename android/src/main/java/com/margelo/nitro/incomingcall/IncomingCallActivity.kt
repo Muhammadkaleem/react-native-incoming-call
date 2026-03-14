@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 class IncomingCallActivity : AppCompatActivity() {
@@ -30,6 +31,11 @@ class IncomingCallActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setupLockScreenFlags()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Prevent back button from dismissing the incoming call screen
+            }
+        })
 
         uuid = intent.getStringExtra("uuid") ?: ""
         callerName = intent.getStringExtra("callerName") ?: "Unknown"
@@ -307,8 +313,4 @@ class IncomingCallActivity : AppCompatActivity() {
         countDownTimer?.cancel()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        // Prevent back button from dismissing the incoming call screen
-    }
 }
